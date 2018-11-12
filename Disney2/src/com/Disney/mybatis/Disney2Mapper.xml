@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com/Disney/mybatis/Disney2Mapper.xml">
+
+  <!-- 여기에 sql문 작성  -->
+  <select id="bestView" resultType="com.Disney.dto.ProductDTO">
+  	SELECT * FROM best_pro_view
+  </select>
+  
+  <!-- memberDAO -->
+  <insert id="inputMember">
+  	INSERT INTO member(id, pw, name, phone, zipcode,addr1,addr2,email)
+	VALUES(#{id},#{pw},#{name},#{phone},#{zipcode},#{addr1},#{addr2},#{email})
+  </insert>
+  
+  
+  <select id="confirmID" parameterType="String" resultType="String">
+  	SELECT id FROM member 
+  	WHERE id = #{userid}
+  </select>
+  
+  <select id="confirmPW" parameterType="com.Disney.dto.MemberDTO" resultType="String">
+  	SELECT id,pw FROM member 
+  	WHERE id =#{id} AND pw=#{pw}
+  </select>
+  
+  <select id="loginCheck" parameterType="com.Disney.dto.MemberDTO" resultType="com.Disney.dto.MemberDTO">
+  	SELECT * FROM member 
+  	WHERE id =#{id} AND pw=#{pw}
+  </select>
+  
+  <update id="updateMember">
+  	UPDATE member SET 
+	name=#{name},
+	phone=#{phone},
+	zipcode=#{zipcode},
+	addr1=#{addr1},
+	addr2=#{addr2},
+	email=#{email}
+	WHERE id=#{id}
+  </update>
+  
+  <update id="updatePw">
+  	UPDATE MEMBER SET 
+	pw = #{pw}
+	WHERE id = #{id}
+  </update>
+  
+  <delete id="deleteMember" parameterType="String">
+  	DELETE FROM member
+  	WHERE id = #{id}
+  </delete>
+  
+  <!-- ========================================================================= -->
+  <!-- boardDAO -->
+  <!-- a == 바로앞에있는 괄호 내용 ==엘리어스  -->
+  
+	
+
+  <select id="countPaging" resultType="int">
+  	<![CDATA[
+  		SELECT count(bno)
+  		FROM disneyboard
+  		WHERE bno > 0]]>
+  				  <if test='flag=="1"'>
+                	<![CDATA[AND title LIKE '%'||#{keyword}||'%']]>
+                  </if>
+                  <if test='flag=="2"'>
+                	<![CDATA[AND content LIKE '%'||#{keyword}||'%']]>
+                  </if>
+                  <if test='flag=="3"'>
+                	<![CDATA[AND title LIKE '%'||#{keyword}||'%' OR content LIKE '%'||#{keyword}||'%']]>
+                  </if>
+                  <if test='flag=="4"'>
+                	<![CDATA[AND writer LIKE '%'||#{keyword}||'%']]>
+                  </if>
+  		
+  </select>
+  <select id="boardList" resultType="com.Disney.dto.BoardDTO">
+  	<![CDATA[
+  		SELECT * FROM ( SELECT rownum rnum,
+        	a.* 
+        	FROM( SELECT *
+                  FROM disneyboard
+                  WHERE bno > 0  ]]>
+                  <if test='flag=="1"'>
+                	<![CDATA[AND title LIKE '%'||#{keyword}||'%']]>
+                  </if>
+                  <if test='flag=="2"'>
+                	<![CDATA[AND content LIKE '%'||#{keyword}||'%']]>
+                  </if>
+                  <if test='flag=="3"'>
+                	<![CDATA[AND title LIKE '%'||#{keyword}||'%' OR content LIKE '%'||#{keyword}||'%']]>
+                  </if>
+                  <if test='flag=="4"'>
+                	<![CDATA[AND writer LIKE '%'||#{keyword}||'%']]>
+                  </if>
+                  
+      <![CDATA[       ORDER BY bno DESC
+                ) a 
+            )
+		WHERE rnum BETWEEN #{pageStart} AND #{perPageNum}		
+	]]>
+  </select>
+  <select id="boardDetailView" resultType = "com.Disney.dto.BoardDTO">
+  	SELECT * 
+  	FROM disneyboard
+	WHERE bno = #{bno}
+  </select>
+  <update id="viewcnt">
+  	UPDATE disneyboard
+  		SET viewcnt=viewcnt+1
+  		WHERE bno=#{bno}
+  </update>
+  <insert id="boardInsert" parameterType="com.Disney.dto.BoardDTO">
+  	INSERT INTO disneyboard(bno, title, content, writer,filename,filesize)
+  	<choose>
+	  	<when test="content != null">
+	  		VALUES(seq_disneyboard.NEXTVAL, #{title},#{content},#{writer},#{filename},#{filesize})
+		</when>
+		<otherwise>
+			VALUES(seq_disneyboard.NEXTVAL, #{title},#{writer},#{filename},#{filesize})
+		</otherwise>
+	</choose>  
+  </insert>
+  
+			
+			
+
+</mapper>
