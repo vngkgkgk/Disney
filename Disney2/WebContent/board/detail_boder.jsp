@@ -83,6 +83,12 @@ th, td{
 		display: inline-block;
 	}
 </style>
+<script type="text/javascript">
+
+	$(document).on("click","#boardupdate",function(){
+		location.href="boardUpdate.bizpoll?bno=${boardview.bno}";
+	});
+</script>
 
 </head>
 <body>
@@ -135,8 +141,10 @@ th, td{
 							</td>
 							<th>첨부파일</th>
 							<td>
+							<c:if test="${bDto.filesize>0}">
 								<a href="download.bizpoll?file=${boardview.filename}">${boardview.filename}
-								(<fmt:formatNumber pattern="0.0" value="${boardview.filesize/1024}"/> byte)</a>	
+								(<fmt:formatNumber pattern="0.0" value="${boardview.filesize/1024}"/> byte)</a>
+							</c:if>	
 							</td>
 						</tr>
 						<tr>
@@ -164,7 +172,7 @@ th, td{
 				<button type="button" class="btn btn-lg submit_btn color-btn txt-h5">목록</button>
 			</div>
 			<c:if test="${sessionScope.loginUser.id==boardview.writer}">
-				<button type="button" class="btn btn-lg submit_btn color-btn txt-h5">수정</button>
+				<button type="button" class="btn btn-lg submit_btn color-btn txt-h5" id="boardupdate">수정</button>
 				<button type="button" class="btn btn-lg submit_btn color-btn txt-h5">삭제</button>
 			</c:if>
 		

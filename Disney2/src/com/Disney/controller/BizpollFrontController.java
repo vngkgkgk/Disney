@@ -17,6 +17,7 @@ import com.Disney.action.BoardInsertAction;
 import com.Disney.action.BoardInsertPlayAction;
 import com.Disney.action.BoardListAction;
 import com.Disney.action.BoardSearchAction;
+import com.Disney.action.BoardUpdateAction;
 import com.Disney.action.BoardViewCntAction;
 import com.Disney.action.ConstractAction;
 import com.Disney.action.IdCheckAction;
@@ -142,12 +143,10 @@ public class BizpollFrontController extends HttpServlet {
 		}else if(command.equals("/download.bizpoll")) {
 			action = new BoardDownloadAction();
 			forward = action.excute(request, response);
+		}else if(command.equals("/boardUpdate.bizpoll")) {
+			action = new BoardUpdateAction();
+			forward = action.excute(request, response);
 		}
-			
-		
-		
-		
-		
 		
 		//공통 분기작업(페이지이동)
 		if(forward != null) {

@@ -126,7 +126,18 @@
 		</otherwise>
 	</choose>  
   </insert>
+  <update id="boardUpdate" parameterType="com.Disney.dto.BoardDTO">
+  	UPDATE disneyboard SET
+  		title=#{title},
+  		writer=#{writer},
+  		<if test="filename != 'no'">
+  			filename =#{filename},
+  			filesize =#{filesize},
+  		</if>
+  			content= #{content}
+  			WHERE bno = #{bno}
   
+  </update>
 			
 			
 
